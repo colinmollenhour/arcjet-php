@@ -2,11 +2,11 @@
 
 Arcjet PHP adds remote Bot Protection, Shield web application firewall (WAF), and IP Analysis to PHP 8.4+ applications through PHP Standards Recommendations (PSR) interfaces.
 
-**Community, unofficial, and experimental.** Authenticated service interoperability has not been verified. A placeholder-key probe returned HTTP 401; it did not validate protection. This package is not an official or Arcjet-endorsed SDK. See [compatibility and verification status](docs/compatibility.md).
+**Community, unofficial, and experimental.** Authenticated synthetic interoperability was observed on PHP 8.5 and a smaller PHP 8.4 subset on 2026-11-06; see the [live validation scope and limits](docs/live-validation.md). This is not production certification or an official or Arcjet-endorsed SDK. See [compatibility and verification status](docs/compatibility.md).
 
 ## Install from a local checkout
 
-Requires PHP 8.4+, Composer 2, and the `ctype`, `filter`, and `json` PHP extensions. The Composer package name is `arcjet/arcjet-php`. No published Packagist release or hosted PHP repository is assumed. In your application's Composer project, register your local checkout and install a real HTTP client and PSR factories:
+Requires PHP 8.4+, Composer 2, and the `ctype`, `filter`, and `json` PHP extensions. The Composer package name is `arcjet/arcjet-php`; no published Packagist release is assumed. Source is available in the [public GitHub repository](https://github.com/colinmollenhour/arcjet-php). In your application's Composer project, register your local checkout and install a real HTTP client and PSR factories:
 
 ```sh
 composer config repositories.arcjet-php path /ABSOLUTE/PATH/TO/arcjet-php
@@ -103,12 +103,13 @@ composer require --dev symfony/http-client nyholm/psr7
 php examples/live-smoke.php --live
 ```
 
-It sends only synthetic traffic, uses LIVE rules, and is not a complete security or release-validation test.
+It sends one synthetic request using LIVE rules. It does not reproduce the [authenticated validation matrix](docs/live-validation.md) or provide a complete security or release-validation test.
 
 ## Documentation
 
 - [API reference](docs/api.md): configuration, rule semantics, decisions, request disclosure, and IP fields.
 - [Compatibility and limits](docs/compatibility.md): deliberate Python deviations and remaining validation gates.
+- [Authenticated live validation](docs/live-validation.md): dated run scope, observed outcomes, and untested claims.
 - [Architecture](docs/architecture.md): remote evaluation, trust boundaries, and operational costs.
 - [Contributing](CONTRIBUTING.md) and [security policy](SECURITY.md).
 - [Apache-2.0 license](LICENSE) and [third-party notices](NOTICE).

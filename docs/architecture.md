@@ -24,9 +24,9 @@ PSR-18 standardizes sending HTTP requests, not connection deadlines, automatic r
 
 A client IP is security-sensitive input. An arbitrary visitor can supply forwarding headers; a deployment's trusted proxy configuration determines whether such headers are authoritative. Explicit application-supplied IP overrides are trusted application inputs, not a mechanism for reading visitor-controlled headers without validation.
 
-Request metadata leaves the application for evaluation. Limiting disclosed data reduces exposure but can also reduce what the service can inspect. Bodies are excluded by default; body inspection and signed request verification require deliberate consideration of exact bytes, body size, and the HTTP stream's behavior. See the API reference for the actual request projection and configuration options.
+Request metadata leaves the application for evaluation. Limiting disclosed data reduces exposure but can also reduce the inputs available for evaluation or signature verification. Bodies are excluded by default. Optional body forwarding uses a generic protobuf field; it does not enable Shield body analysis. Shield uses headers and query metadata, [not request bodies](https://docs.arcjet.com/limitations/#shield-analysis-does-not-use-the-request-body). Signed-request requirements still need deliberate consideration of exact bytes, body size, and the HTTP stream's behavior. See the [API disclosure reference](api.md#request-disclosure) for the actual projection and configuration options.
 
-Opting into body inspection is strict: an oversized or unsafe-to-read body produces an error rather than a successful result from silently reduced inspection. This can reject large uploads unless the application deliberately configures its body cap or route policy. Request-local failures do not qualify for outage fail-open.
+Opting into body forwarding is strict: an oversized or unsafe-to-read body produces an error rather than silently omitting or truncating it. This can reject large uploads unless the application deliberately configures its body cap or route policy. Request-local failures do not qualify for outage fail-open.
 
 ## Decisions are not authentication
 
@@ -38,4 +38,4 @@ An ERROR conclusion records unavailable or invalid protection, not successful in
 
 Offline conformance tests compare generated messages and binary fixtures against the Python protocol. They establish serialization and SDK behavior, not the effectiveness of Arcjet's hosted protection.
 
-Authenticated synthetic live checks are a separate release gate. Until those succeed for your account, treat this port as experimental and not production-verified. This repository is not an official or Arcjet-endorsed SDK.
+Authenticated synthetic interoperability was observed on PHP 8.5 and a smaller PHP 8.4 subset on 2026-11-06. The [live validation reference](live-validation.md) separates per-runtime coverage from untested effectiveness, signed-bot, and production claims. These manual checks are distinct from hosted offline CI; neither establishes deployment safety or future service compatibility. This port remains experimental, not production-certified or an official or Arcjet-endorsed SDK.
