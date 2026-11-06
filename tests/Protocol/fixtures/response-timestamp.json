@@ -1,0 +1,34 @@
+{
+  "message": "DecideResponse",
+  "value": {
+    "decision": {
+      "conclusion": "CONCLUSION_DENY",
+      "id": "lreq_fixture_timestamp",
+      "reason": {
+        "rateLimit": {
+          "count": 101,
+          "max": 100,
+          "resetInSeconds": 30,
+          "resetTime": "2026-11-06T12:34:56.123456789Z",
+          "windowInSeconds": 60
+        }
+      },
+      "ruleResults": [
+        {
+          "conclusion": "CONCLUSION_DENY",
+          "reason": {
+            "rateLimit": {
+              "count": 101,
+              "max": 100,
+              "resetInSeconds": 30,
+              "resetTime": "2026-11-06T12:34:56.123456789Z",
+              "windowInSeconds": 60
+            }
+          },
+          "ruleId": "fixture-rule",
+          "state": "RULE_STATE_RUN"
+        }
+      ]
+    }
+  }
+}

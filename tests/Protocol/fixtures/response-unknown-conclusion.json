@@ -1,0 +1,9 @@
+{
+  "message": "DecideResponse",
+  "value": {
+    "decision": {
+      "conclusion": 12345,
+      "id": "lreq_fixture_future"
+    }
+  }
+}

@@ -38,3 +38,21 @@ jobs:
 
       - name: Check package
         run: composer check
+
+      - name: Install pinned protocol build tools
+        if: matrix.php == '8.4'
+        run: |
+          curl --fail --silent --show-error --location --max-time 120 \
+            https://github.com/protocolbuffers/protobuf/releases/download/v36.2/protoc-36.2-linux-x86_64.zip \
+            --output "$RUNNER_TEMP/protoc.zip"
+          echo "121f6c7afe1d4d0e3ea6aab9432038599250134cbf4474cb1167d2c7decd4278  $RUNNER_TEMP/protoc.zip" | sha256sum --check
+          unzip -q "$RUNNER_TEMP/protoc.zip" -d "$RUNNER_TEMP/protoc"
+          python3 -m venv "$RUNNER_TEMP/arcjet-proto-venv"
+          "$RUNNER_TEMP/arcjet-proto-venv/bin/python" -m pip install -r tools/proto/requirements.txt
+
+      - name: Verify protocol generation and both wire directions
+        if: matrix.php == '8.4'
+        run: |
+          "$RUNNER_TEMP/arcjet-proto-venv/bin/python" tools/proto/generate.py \
+            --protoc "$RUNNER_TEMP/protoc/bin/protoc" --check --verify-php
+          "$RUNNER_TEMP/arcjet-proto-venv/bin/python" -m unittest discover -s tools/proto -p 'test_*.py'

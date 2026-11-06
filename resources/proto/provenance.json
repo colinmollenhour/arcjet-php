@@ -1,0 +1,25 @@
+{
+  "upstream": "https://github.com/arcjet/arcjet-py",
+  "revision": "498b28b17ebc1a652974ab8ae98c60604e892095",
+  "source": "src/arcjet/proto/decide/v1alpha1/decide_pb2.py",
+  "extraction": "ast.parse + ast.literal_eval of AddSerializedFile argument; no upstream code execution",
+  "original_descriptor": {
+    "file": "decide.original.bin",
+    "sha256": "d9235e410d6b87a099da2bffb324186eefce4d7a007352a520040968cca06d6e",
+    "size": 11027
+  },
+  "timestamp_descriptor": {
+    "file": "timestamp.bin",
+    "sha256": "422a163a2d7051465e0a516584b4d96d18c270ec4e7ad3c21ad33e5c440ebecc",
+    "size": 255,
+    "source": "google/protobuf/timestamp.proto",
+    "source_sha256": "fa6c44dca2c90a2aaf3a1e4776cef2e9177f70fba365f236269f0f41ac166c96",
+    "compiler": "libprotoc 36.2"
+  },
+  "generation": {
+    "protoc": "libprotoc 36.2",
+    "python_protobuf": "6.33.2",
+    "php_namespace": "Arcjet\\Internal\\Proto",
+    "php_metadata_namespace": "Arcjet\\Internal\\Proto\\Metadata"
+  }
+}

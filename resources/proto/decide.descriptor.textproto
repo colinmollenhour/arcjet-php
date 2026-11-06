@@ -1,0 +1,1904 @@
+name: "proto/decide/v1alpha1/decide.proto"
+package: "proto.decide.v1alpha1"
+dependency: "google/protobuf/timestamp.proto"
+message_type {
+  name: "IpDetails"
+  field {
+    name: "latitude"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_DOUBLE
+    json_name: "latitude"
+  }
+  field {
+    name: "longitude"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_DOUBLE
+    json_name: "longitude"
+  }
+  field {
+    name: "accuracy_radius"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "accuracyRadius"
+  }
+  field {
+    name: "timezone"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "timezone"
+  }
+  field {
+    name: "postal_code"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "postalCode"
+  }
+  field {
+    name: "city"
+    number: 6
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "city"
+  }
+  field {
+    name: "region"
+    number: 7
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "region"
+  }
+  field {
+    name: "country"
+    number: 8
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "country"
+  }
+  field {
+    name: "country_name"
+    number: 9
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "countryName"
+  }
+  field {
+    name: "continent"
+    number: 10
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "continent"
+  }
+  field {
+    name: "continent_name"
+    number: 11
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "continentName"
+  }
+  field {
+    name: "asn"
+    number: 12
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "asn"
+  }
+  field {
+    name: "asn_name"
+    number: 13
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "asnName"
+  }
+  field {
+    name: "asn_domain"
+    number: 14
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "asnDomain"
+  }
+  field {
+    name: "asn_type"
+    number: 15
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "asnType"
+  }
+  field {
+    name: "asn_country"
+    number: 16
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "asnCountry"
+  }
+  field {
+    name: "service"
+    number: 17
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "service"
+  }
+  field {
+    name: "is_hosting"
+    number: 18
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "isHosting"
+  }
+  field {
+    name: "is_vpn"
+    number: 19
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "isVpn"
+  }
+  field {
+    name: "is_proxy"
+    number: 20
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "isProxy"
+  }
+  field {
+    name: "is_tor"
+    number: 21
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "isTor"
+  }
+  field {
+    name: "is_relay"
+    number: 22
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "isRelay"
+  }
+  field {
+    name: "is_abuser"
+    number: 23
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "isAbuser"
+  }
+  field {
+    name: "bots"
+    number: 24
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.IpDetails.BotsEntry"
+    json_name: "bots"
+  }
+  field {
+    name: "threat"
+    number: 25
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.ThreatIntelligence"
+    json_name: "threat"
+  }
+  nested_type {
+    name: "BotsEntry"
+    field {
+      name: "key"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "key"
+    }
+    field {
+      name: "value"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "value"
+    }
+    options {
+      map_entry: true
+    }
+  }
+}
+message_type {
+  name: "ThreatIntelligence"
+  field {
+    name: "risk_level"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "riskLevel"
+  }
+  field {
+    name: "confidence"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "confidence"
+  }
+  field {
+    name: "reputation"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "reputation"
+  }
+  field {
+    name: "is_safe"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "isSafe"
+  }
+  field {
+    name: "network_types"
+    number: 5
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "networkTypes"
+  }
+  field {
+    name: "activities"
+    number: 6
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "activities"
+  }
+  field {
+    name: "entities"
+    number: 7
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "entities"
+  }
+  field {
+    name: "entity_name"
+    number: 8
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "entityName"
+  }
+  field {
+    name: "service"
+    number: 9
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "service"
+  }
+  field {
+    name: "background_noise"
+    number: 10
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "backgroundNoise"
+  }
+}
+message_type {
+  name: "Reason"
+  field {
+    name: "rate_limit"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.RateLimitReason"
+    oneof_index: 0
+    json_name: "rateLimit"
+  }
+  field {
+    name: "edge_rule"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.EdgeRuleReason"
+    options {
+      deprecated: true
+    }
+    oneof_index: 0
+    json_name: "edgeRule"
+  }
+  field {
+    name: "bot"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.BotReason"
+    oneof_index: 0
+    json_name: "bot"
+  }
+  field {
+    name: "shield"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.ShieldReason"
+    oneof_index: 0
+    json_name: "shield"
+  }
+  field {
+    name: "email"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.EmailReason"
+    oneof_index: 0
+    json_name: "email"
+  }
+  field {
+    name: "error"
+    number: 6
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.ErrorReason"
+    oneof_index: 0
+    json_name: "error"
+  }
+  field {
+    name: "sensitive_info"
+    number: 7
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.SensitiveInfoReason"
+    oneof_index: 0
+    json_name: "sensitiveInfo"
+  }
+  field {
+    name: "bot_v2"
+    number: 8
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.BotV2Reason"
+    oneof_index: 0
+    json_name: "botV2"
+  }
+  field {
+    name: "filter"
+    number: 9
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.FilterReason"
+    oneof_index: 0
+    json_name: "filter"
+  }
+  field {
+    name: "prompt_injection"
+    number: 10
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.PromptInjectionReason"
+    oneof_index: 0
+    json_name: "promptInjection"
+  }
+  oneof_decl {
+    name: "reason"
+  }
+}
+message_type {
+  name: "RateLimitReason"
+  field {
+    name: "max"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "max"
+  }
+  field {
+    name: "count"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    options {
+      deprecated: true
+    }
+    json_name: "count"
+  }
+  field {
+    name: "remaining"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "remaining"
+  }
+  field {
+    name: "reset_time"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".google.protobuf.Timestamp"
+    options {
+      deprecated: true
+    }
+    json_name: "resetTime"
+  }
+  field {
+    name: "reset_in_seconds"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "resetInSeconds"
+  }
+  field {
+    name: "window_in_seconds"
+    number: 6
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "windowInSeconds"
+  }
+}
+message_type {
+  name: "EdgeRuleReason"
+  options {
+    deprecated: true
+  }
+}
+message_type {
+  name: "BotReason"
+  field {
+    name: "bot_type"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.BotType"
+    json_name: "botType"
+  }
+  field {
+    name: "bot_score"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_INT32
+    json_name: "botScore"
+  }
+  field {
+    name: "user_agent_match"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "userAgentMatch"
+  }
+  field {
+    name: "ip_hosting"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "ipHosting"
+  }
+  field {
+    name: "ip_vpn"
+    number: 6
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "ipVpn"
+  }
+  field {
+    name: "ip_proxy"
+    number: 7
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "ipProxy"
+  }
+  field {
+    name: "ip_tor"
+    number: 8
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "ipTor"
+  }
+  field {
+    name: "ip_relay"
+    number: 9
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "ipRelay"
+  }
+}
+message_type {
+  name: "BotV2Reason"
+  field {
+    name: "allowed"
+    number: 1
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "allowed"
+  }
+  field {
+    name: "denied"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "denied"
+  }
+  field {
+    name: "verified"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "verified"
+  }
+  field {
+    name: "spoofed"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "spoofed"
+  }
+}
+message_type {
+  name: "ShieldReason"
+  field {
+    name: "shield_triggered"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "shieldTriggered"
+  }
+  field {
+    name: "suspicious"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "suspicious"
+  }
+}
+message_type {
+  name: "FilterReason"
+  field {
+    name: "matched_expression"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    options {
+      deprecated: true
+    }
+    json_name: "matchedExpression"
+  }
+  field {
+    name: "matched_expressions"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "matchedExpressions"
+  }
+  field {
+    name: "undetermined_expressions"
+    number: 3
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "undeterminedExpressions"
+  }
+}
+message_type {
+  name: "EmailReason"
+  field {
+    name: "email_types"
+    number: 1
+    label: LABEL_REPEATED
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.EmailType"
+    json_name: "emailTypes"
+  }
+}
+message_type {
+  name: "ErrorReason"
+  field {
+    name: "message"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "message"
+  }
+}
+message_type {
+  name: "PromptInjectionReason"
+  field {
+    name: "injection_detected"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "injectionDetected"
+  }
+  field {
+    name: "score"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_DOUBLE
+    options {
+      deprecated: true
+    }
+    json_name: "score"
+  }
+  field {
+    name: "total_tokens"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "totalTokens"
+  }
+}
+message_type {
+  name: "IdentifiedEntity"
+  field {
+    name: "identified_type"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "identifiedType"
+  }
+  field {
+    name: "start"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "start"
+  }
+  field {
+    name: "end"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "end"
+  }
+}
+message_type {
+  name: "SensitiveInfoReason"
+  field {
+    name: "allowed"
+    number: 1
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.IdentifiedEntity"
+    json_name: "allowed"
+  }
+  field {
+    name: "denied"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.IdentifiedEntity"
+    json_name: "denied"
+  }
+}
+message_type {
+  name: "RateLimitRule"
+  field {
+    name: "mode"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Mode"
+    json_name: "mode"
+  }
+  field {
+    name: "match"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "match"
+  }
+  field {
+    name: "characteristics"
+    number: 3
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "characteristics"
+  }
+  field {
+    name: "window"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    options {
+      deprecated: true
+    }
+    json_name: "window"
+  }
+  field {
+    name: "max"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "max"
+  }
+  field {
+    name: "timeout"
+    number: 6
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "timeout"
+  }
+  field {
+    name: "algorithm"
+    number: 7
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.RateLimitAlgorithm"
+    json_name: "algorithm"
+  }
+  field {
+    name: "refill_rate"
+    number: 8
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "refillRate"
+  }
+  field {
+    name: "interval"
+    number: 9
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "interval"
+  }
+  field {
+    name: "capacity"
+    number: 10
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "capacity"
+  }
+  field {
+    name: "window_in_seconds"
+    number: 12
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "windowInSeconds"
+  }
+  field {
+    name: "version"
+    number: 13
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.RateLimitRuleVersion"
+    json_name: "version"
+  }
+  reserved_range {
+    start: 11
+    end: 12
+  }
+  reserved_name: "requested"
+}
+message_type {
+  name: "BotRule"
+  field {
+    name: "mode"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Mode"
+    json_name: "mode"
+  }
+  field {
+    name: "block"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.BotType"
+    json_name: "block"
+  }
+  field {
+    name: "patterns"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.BotRule.Patterns"
+    json_name: "patterns"
+  }
+  nested_type {
+    name: "Patterns"
+    field {
+      name: "add"
+      number: 1
+      label: LABEL_REPEATED
+      type: TYPE_MESSAGE
+      type_name: ".proto.decide.v1alpha1.BotRule.Patterns.AddEntry"
+      json_name: "add"
+    }
+    field {
+      name: "remove"
+      number: 2
+      label: LABEL_REPEATED
+      type: TYPE_STRING
+      json_name: "remove"
+    }
+    nested_type {
+      name: "AddEntry"
+      field {
+        name: "key"
+        number: 1
+        label: LABEL_OPTIONAL
+        type: TYPE_STRING
+        json_name: "key"
+      }
+      field {
+        name: "value"
+        number: 2
+        label: LABEL_OPTIONAL
+        type: TYPE_ENUM
+        type_name: ".proto.decide.v1alpha1.BotType"
+        json_name: "value"
+      }
+      options {
+        map_entry: true
+      }
+    }
+  }
+}
+message_type {
+  name: "BotV2Rule"
+  field {
+    name: "mode"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Mode"
+    json_name: "mode"
+  }
+  field {
+    name: "allow"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "allow"
+  }
+  field {
+    name: "deny"
+    number: 3
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "deny"
+  }
+  field {
+    name: "version"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.BotV2RuleVersion"
+    json_name: "version"
+  }
+}
+message_type {
+  name: "EmailRule"
+  field {
+    name: "mode"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Mode"
+    json_name: "mode"
+  }
+  field {
+    name: "block"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.EmailType"
+    options {
+      deprecated: true
+    }
+    json_name: "block"
+  }
+  field {
+    name: "require_top_level_domain"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "requireTopLevelDomain"
+  }
+  field {
+    name: "allow_domain_literal"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "allowDomainLiteral"
+  }
+  field {
+    name: "allow"
+    number: 5
+    label: LABEL_REPEATED
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.EmailType"
+    json_name: "allow"
+  }
+  field {
+    name: "deny"
+    number: 6
+    label: LABEL_REPEATED
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.EmailType"
+    json_name: "deny"
+  }
+  field {
+    name: "version"
+    number: 7
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.EmailRuleVersion"
+    json_name: "version"
+  }
+}
+message_type {
+  name: "SensitiveInfoRule"
+  field {
+    name: "mode"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Mode"
+    json_name: "mode"
+  }
+  field {
+    name: "allow"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "allow"
+  }
+  field {
+    name: "deny"
+    number: 3
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "deny"
+  }
+  field {
+    name: "version"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.SensitiveInfoRuleVersion"
+    json_name: "version"
+  }
+}
+message_type {
+  name: "ShieldRule"
+  field {
+    name: "mode"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Mode"
+    json_name: "mode"
+  }
+  field {
+    name: "auto_added"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_BOOL
+    json_name: "autoAdded"
+  }
+  field {
+    name: "characteristics"
+    number: 3
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "characteristics"
+  }
+  field {
+    name: "version"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.ShieldRuleVersion"
+    json_name: "version"
+  }
+}
+message_type {
+  name: "FilterRule"
+  field {
+    name: "mode"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Mode"
+    json_name: "mode"
+  }
+  field {
+    name: "allow"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "allow"
+  }
+  field {
+    name: "deny"
+    number: 3
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "deny"
+  }
+  field {
+    name: "version"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.FilterRuleVersion"
+    json_name: "version"
+  }
+}
+message_type {
+  name: "PromptInjectionDetectionRule"
+  field {
+    name: "mode"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Mode"
+    json_name: "mode"
+  }
+  field {
+    name: "threshold"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_DOUBLE
+    options {
+      deprecated: true
+    }
+    oneof_index: 0
+    json_name: "threshold"
+    proto3_optional: true
+  }
+  field {
+    name: "version"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.PromptInjectionDetectionRuleVersion"
+    json_name: "version"
+  }
+  oneof_decl {
+    name: "_threshold"
+  }
+}
+message_type {
+  name: "Rule"
+  field {
+    name: "rate_limit"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.RateLimitRule"
+    oneof_index: 0
+    json_name: "rateLimit"
+  }
+  field {
+    name: "bots"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.BotRule"
+    oneof_index: 0
+    json_name: "bots"
+  }
+  field {
+    name: "email"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.EmailRule"
+    oneof_index: 0
+    json_name: "email"
+  }
+  field {
+    name: "shield"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.ShieldRule"
+    oneof_index: 0
+    json_name: "shield"
+  }
+  field {
+    name: "sensitive_info"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.SensitiveInfoRule"
+    oneof_index: 0
+    json_name: "sensitiveInfo"
+  }
+  field {
+    name: "bot_v2"
+    number: 6
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.BotV2Rule"
+    oneof_index: 0
+    json_name: "botV2"
+  }
+  field {
+    name: "filter"
+    number: 7
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.FilterRule"
+    oneof_index: 0
+    json_name: "filter"
+  }
+  field {
+    name: "prompt_injection_detection"
+    number: 8
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.PromptInjectionDetectionRule"
+    oneof_index: 0
+    json_name: "promptInjectionDetection"
+  }
+  oneof_decl {
+    name: "rule"
+  }
+}
+message_type {
+  name: "RuleResult"
+  field {
+    name: "rule_id"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "ruleId"
+  }
+  field {
+    name: "state"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.RuleState"
+    json_name: "state"
+  }
+  field {
+    name: "conclusion"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Conclusion"
+    json_name: "conclusion"
+  }
+  field {
+    name: "reason"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.Reason"
+    json_name: "reason"
+  }
+  field {
+    name: "ttl"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "ttl"
+  }
+  field {
+    name: "fingerprint"
+    number: 6
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "fingerprint"
+  }
+}
+message_type {
+  name: "Warning"
+  field {
+    name: "code"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "code"
+  }
+  field {
+    name: "message"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "message"
+  }
+}
+message_type {
+  name: "RequestDetails"
+  field {
+    name: "ip"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "ip"
+  }
+  field {
+    name: "method"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "method"
+  }
+  field {
+    name: "protocol"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "protocol"
+  }
+  field {
+    name: "host"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "host"
+  }
+  field {
+    name: "path"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "path"
+  }
+  field {
+    name: "headers"
+    number: 6
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.RequestDetails.HeadersEntry"
+    json_name: "headers"
+  }
+  field {
+    name: "body"
+    number: 7
+    label: LABEL_OPTIONAL
+    type: TYPE_BYTES
+    json_name: "body"
+  }
+  field {
+    name: "extra"
+    number: 8
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.RequestDetails.ExtraEntry"
+    json_name: "extra"
+  }
+  field {
+    name: "email"
+    number: 9
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "email"
+  }
+  field {
+    name: "cookies"
+    number: 10
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "cookies"
+  }
+  field {
+    name: "query"
+    number: 11
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "query"
+  }
+  field {
+    name: "correlation_id"
+    number: 12
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "correlationId"
+  }
+  field {
+    name: "raw_path"
+    number: 13
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "rawPath"
+  }
+  nested_type {
+    name: "HeadersEntry"
+    field {
+      name: "key"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "key"
+    }
+    field {
+      name: "value"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "value"
+    }
+    options {
+      map_entry: true
+    }
+  }
+  nested_type {
+    name: "ExtraEntry"
+    field {
+      name: "key"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "key"
+    }
+    field {
+      name: "value"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "value"
+    }
+    options {
+      map_entry: true
+    }
+  }
+}
+message_type {
+  name: "Decision"
+  field {
+    name: "id"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "id"
+  }
+  field {
+    name: "conclusion"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.Conclusion"
+    json_name: "conclusion"
+  }
+  field {
+    name: "reason"
+    number: 3
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.Reason"
+    json_name: "reason"
+  }
+  field {
+    name: "rule_results"
+    number: 4
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.RuleResult"
+    json_name: "ruleResults"
+  }
+  field {
+    name: "ttl"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_UINT32
+    json_name: "ttl"
+  }
+  field {
+    name: "ip_details"
+    number: 6
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.IpDetails"
+    json_name: "ipDetails"
+  }
+}
+message_type {
+  name: "DecideRequest"
+  field {
+    name: "sdk_stack"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.SDKStack"
+    json_name: "sdkStack"
+  }
+  field {
+    name: "sdk_version"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "sdkVersion"
+  }
+  field {
+    name: "details"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.RequestDetails"
+    json_name: "details"
+  }
+  field {
+    name: "rules"
+    number: 5
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.Rule"
+    json_name: "rules"
+  }
+  field {
+    name: "characteristics"
+    number: 6
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "characteristics"
+  }
+  field {
+    name: "metadata_json"
+    number: 7
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.DecideRequest.MetadataJsonEntry"
+    json_name: "metadataJson"
+  }
+  field {
+    name: "local_warnings"
+    number: 8
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.Warning"
+    json_name: "localWarnings"
+  }
+  nested_type {
+    name: "MetadataJsonEntry"
+    field {
+      name: "key"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "key"
+    }
+    field {
+      name: "value"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "value"
+    }
+    options {
+      map_entry: true
+    }
+  }
+  reserved_range {
+    start: 3
+    end: 4
+  }
+  reserved_name: "fingerprint"
+}
+message_type {
+  name: "DecideResponse"
+  field {
+    name: "decision"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.Decision"
+    json_name: "decision"
+  }
+  field {
+    name: "extra"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.DecideResponse.ExtraEntry"
+    json_name: "extra"
+  }
+  nested_type {
+    name: "ExtraEntry"
+    field {
+      name: "key"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "key"
+    }
+    field {
+      name: "value"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "value"
+    }
+    options {
+      map_entry: true
+    }
+  }
+}
+message_type {
+  name: "ReportRequest"
+  field {
+    name: "sdk_stack"
+    number: 1
+    label: LABEL_OPTIONAL
+    type: TYPE_ENUM
+    type_name: ".proto.decide.v1alpha1.SDKStack"
+    json_name: "sdkStack"
+  }
+  field {
+    name: "sdk_version"
+    number: 2
+    label: LABEL_OPTIONAL
+    type: TYPE_STRING
+    json_name: "sdkVersion"
+  }
+  field {
+    name: "details"
+    number: 4
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.RequestDetails"
+    json_name: "details"
+  }
+  field {
+    name: "decision"
+    number: 5
+    label: LABEL_OPTIONAL
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.Decision"
+    json_name: "decision"
+  }
+  field {
+    name: "rules"
+    number: 6
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.Rule"
+    json_name: "rules"
+  }
+  field {
+    name: "characteristics"
+    number: 8
+    label: LABEL_REPEATED
+    type: TYPE_STRING
+    json_name: "characteristics"
+  }
+  field {
+    name: "metadata_json"
+    number: 9
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.ReportRequest.MetadataJsonEntry"
+    json_name: "metadataJson"
+  }
+  field {
+    name: "local_warnings"
+    number: 10
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.Warning"
+    json_name: "localWarnings"
+  }
+  nested_type {
+    name: "MetadataJsonEntry"
+    field {
+      name: "key"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "key"
+    }
+    field {
+      name: "value"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "value"
+    }
+    options {
+      map_entry: true
+    }
+  }
+  reserved_range {
+    start: 3
+    end: 4
+  }
+  reserved_range {
+    start: 7
+    end: 8
+  }
+  reserved_name: "fingerprint"
+  reserved_name: "received_at"
+}
+message_type {
+  name: "ReportResponse"
+  field {
+    name: "extra"
+    number: 2
+    label: LABEL_REPEATED
+    type: TYPE_MESSAGE
+    type_name: ".proto.decide.v1alpha1.ReportResponse.ExtraEntry"
+    json_name: "extra"
+  }
+  nested_type {
+    name: "ExtraEntry"
+    field {
+      name: "key"
+      number: 1
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "key"
+    }
+    field {
+      name: "value"
+      number: 2
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "value"
+    }
+    options {
+      map_entry: true
+    }
+  }
+  reserved_range {
+    start: 1
+    end: 2
+  }
+  reserved_name: "decision"
+}
+enum_type {
+  name: "BotType"
+  value {
+    name: "BOT_TYPE_UNSPECIFIED"
+    number: 0
+  }
+  value {
+    name: "BOT_TYPE_NOT_ANALYZED"
+    number: 1
+  }
+  value {
+    name: "BOT_TYPE_AUTOMATED"
+    number: 2
+  }
+  value {
+    name: "BOT_TYPE_LIKELY_AUTOMATED"
+    number: 3
+  }
+  value {
+    name: "BOT_TYPE_LIKELY_NOT_A_BOT"
+    number: 4
+  }
+  value {
+    name: "BOT_TYPE_VERIFIED_BOT"
+    number: 5
+  }
+}
+enum_type {
+  name: "EmailType"
+  value {
+    name: "EMAIL_TYPE_UNSPECIFIED"
+    number: 0
+  }
+  value {
+    name: "EMAIL_TYPE_DISPOSABLE"
+    number: 1
+  }
+  value {
+    name: "EMAIL_TYPE_FREE"
+    number: 2
+  }
+  value {
+    name: "EMAIL_TYPE_NO_MX_RECORDS"
+    number: 3
+  }
+  value {
+    name: "EMAIL_TYPE_NO_GRAVATAR"
+    number: 4
+  }
+  value {
+    name: "EMAIL_TYPE_INVALID"
+    number: 5
+  }
+}
+enum_type {
+  name: "Mode"
+  value {
+    name: "MODE_UNSPECIFIED"
+    number: 0
+  }
+  value {
+    name: "MODE_DRY_RUN"
+    number: 1
+  }
+  value {
+    name: "MODE_LIVE"
+    number: 2
+  }
+}
+enum_type {
+  name: "RuleState"
+  value {
+    name: "RULE_STATE_UNSPECIFIED"
+    number: 0
+  }
+  value {
+    name: "RULE_STATE_RUN"
+    number: 1
+  }
+  value {
+    name: "RULE_STATE_NOT_RUN"
+    number: 2
+  }
+  value {
+    name: "RULE_STATE_DRY_RUN"
+    number: 3
+  }
+  value {
+    name: "RULE_STATE_CACHED"
+    number: 4
+  }
+}
+enum_type {
+  name: "Conclusion"
+  value {
+    name: "CONCLUSION_UNSPECIFIED"
+    number: 0
+  }
+  value {
+    name: "CONCLUSION_ALLOW"
+    number: 1
+  }
+  value {
+    name: "CONCLUSION_DENY"
+    number: 2
+  }
+  value {
+    name: "CONCLUSION_CHALLENGE"
+    number: 3
+  }
+  value {
+    name: "CONCLUSION_ERROR"
+    number: 4
+  }
+}
+enum_type {
+  name: "SDKStack"
+  value {
+    name: "SDK_STACK_UNSPECIFIED"
+    number: 0
+  }
+  value {
+    name: "SDK_STACK_NODEJS"
+    number: 1
+  }
+  value {
+    name: "SDK_STACK_NEXTJS"
+    number: 2
+  }
+  value {
+    name: "SDK_STACK_PYTHON"
+    number: 3
+  }
+  value {
+    name: "SDK_STACK_DJANGO"
+    number: 4
+  }
+  value {
+    name: "SDK_STACK_BUN"
+    number: 5
+  }
+  value {
+    name: "SDK_STACK_DENO"
+    number: 6
+  }
+  value {
+    name: "SDK_STACK_SVELTEKIT"
+    number: 7
+  }
+  value {
+    name: "SDK_STACK_HONO"
+    number: 8
+  }
+  value {
+    name: "SDK_STACK_NUXT"
+    number: 9
+  }
+  value {
+    name: "SDK_STACK_NESTJS"
+    number: 10
+  }
+  value {
+    name: "SDK_STACK_REMIX"
+    number: 11
+  }
+  value {
+    name: "SDK_STACK_ASTRO"
+    number: 12
+  }
+  value {
+    name: "SDK_STACK_FASTIFY"
+    number: 13
+  }
+  value {
+    name: "SDK_STACK_REACT_ROUTER"
+    number: 14
+  }
+  value {
+    name: "SDK_STACK_GO"
+    number: 15
+  }
+}
+enum_type {
+  name: "RateLimitAlgorithm"
+  value {
+    name: "RATE_LIMIT_ALGORITHM_UNSPECIFIED"
+    number: 0
+  }
+  value {
+    name: "RATE_LIMIT_ALGORITHM_TOKEN_BUCKET"
+    number: 1
+  }
+  value {
+    name: "RATE_LIMIT_ALGORITHM_FIXED_WINDOW"
+    number: 2
+  }
+  value {
+    name: "RATE_LIMIT_ALGORITHM_SLIDING_WINDOW"
+    number: 3
+  }
+}
+enum_type {
+  name: "RateLimitRuleVersion"
+  value {
+    name: "RATE_LIMIT_RULE_VERSION_UNSPECIFIED"
+    number: 0
+  }
+}
+enum_type {
+  name: "BotV2RuleVersion"
+  value {
+    name: "BOT_V2_RULE_VERSION_UNSPECIFIED"
+    number: 0
+  }
+}
+enum_type {
+  name: "EmailRuleVersion"
+  value {
+    name: "EMAIL_RULE_VERSION_UNSPECIFIED"
+    number: 0
+  }
+}
+enum_type {
+  name: "SensitiveInfoRuleVersion"
+  value {
+    name: "SENSITIVE_INFO_RULE_VERSION_UNSPECIFIED"
+    number: 0
+  }
+}
+enum_type {
+  name: "ShieldRuleVersion"
+  value {
+    name: "SHIELD_RULE_VERSION_UNSPECIFIED"
+    number: 0
+  }
+}
+enum_type {
+  name: "FilterRuleVersion"
+  value {
+    name: "FILTER_RULE_VERSION_UNSPECIFIED"
+    number: 0
+  }
+}
+enum_type {
+  name: "PromptInjectionDetectionRuleVersion"
+  value {
+    name: "PROMPT_INJECTION_DETECTION_RULE_VERSION_UNSPECIFIED"
+    number: 0
+  }
+}
+service {
+  name: "DecideService"
+  method {
+    name: "Decide"
+    input_type: ".proto.decide.v1alpha1.DecideRequest"
+    output_type: ".proto.decide.v1alpha1.DecideResponse"
+  }
+  method {
+    name: "Report"
+    input_type: ".proto.decide.v1alpha1.ReportRequest"
+    output_type: ".proto.decide.v1alpha1.ReportResponse"
+  }
+}
+options {
+  java_package: "com.proto.decide.v1alpha1"
+  java_outer_classname: "DecideProto"
+  java_multiple_files: true
+  go_package: "arcjet/gen/go/decide/alpha1;decidev1alpha1"
+  objc_class_prefix: "PDX"
+  csharp_namespace: "Proto.Decide.V1alpha1"
+  php_namespace: "Proto\\Decide\\V1alpha1"
+  php_metadata_namespace: "Proto\\Decide\\V1alpha1\\GPBMetadata"
+  ruby_package: "Proto::Decide::V1alpha1"
+}
+syntax: "proto3"

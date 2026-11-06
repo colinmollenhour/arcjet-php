@@ -1,0 +1,124 @@
+{
+  "message": "DecideResponse",
+  "value": {
+    "decision": {
+      "conclusion": "CONCLUSION_DENY",
+      "id": "lreq_fixture_bot",
+      "ipDetails": {
+        "accuracyRadius": 20,
+        "asn": "64500",
+        "asnCountry": "US",
+        "asnDomain": "example.test",
+        "asnName": "Example Network",
+        "asnType": "hosting",
+        "bots": {
+          "fixture": "automated",
+          "search": "verified"
+        },
+        "city": "San Francisco",
+        "continent": "NA",
+        "continentName": "North America",
+        "country": "US",
+        "countryName": "United States",
+        "isAbuser": true,
+        "isHosting": true,
+        "isProxy": true,
+        "isRelay": true,
+        "isTor": true,
+        "isVpn": true,
+        "latitude": 37.75,
+        "longitude": -122.5,
+        "postalCode": "94107",
+        "region": "CA",
+        "service": "fixture-cloud",
+        "threat": {
+          "activities": [
+            "automation",
+            "scanning"
+          ],
+          "backgroundNoise": 7,
+          "confidence": "high",
+          "entities": [
+            "fixture"
+          ],
+          "entityName": "Example Network",
+          "networkTypes": [
+            "hosting",
+            "vpn"
+          ],
+          "reputation": "poor",
+          "riskLevel": "high",
+          "service": "fixture-intelligence"
+        },
+        "timezone": "America/Los_Angeles"
+      },
+      "reason": {
+        "botV2": {
+          "allowed": [
+            "GOOGLE_CRAWLER"
+          ],
+          "denied": [
+            "CURL"
+          ],
+          "spoofed": true,
+          "verified": true
+        }
+      },
+      "ruleResults": [
+        {
+          "conclusion": "CONCLUSION_DENY",
+          "fingerprint": "bot-fingerprint",
+          "reason": {
+            "botV2": {
+              "allowed": [
+                "GOOGLE_CRAWLER"
+              ],
+              "denied": [
+                "CURL"
+              ],
+              "spoofed": true,
+              "verified": true
+            }
+          },
+          "ruleId": "bot-rule",
+          "state": "RULE_STATE_RUN",
+          "ttl": 60
+        },
+        {
+          "conclusion": "CONCLUSION_DENY",
+          "reason": {
+            "shield": {
+              "shieldTriggered": true,
+              "suspicious": true
+            }
+          },
+          "ruleId": "shield-rule",
+          "state": "RULE_STATE_DRY_RUN",
+          "ttl": 10
+        },
+        {
+          "conclusion": "CONCLUSION_DENY",
+          "reason": {
+            "bot": {
+              "botScore": 99,
+              "botType": "BOT_TYPE_AUTOMATED",
+              "ipHosting": true,
+              "ipProxy": true,
+              "ipRelay": true,
+              "ipTor": true,
+              "ipVpn": true,
+              "userAgentMatch": true
+            }
+          },
+          "ruleId": "legacy-bot-rule",
+          "state": "RULE_STATE_CACHED"
+        }
+      ],
+      "ttl": 60
+    },
+    "extra": {
+      "fixture": "python",
+      "trace": "offline"
+    }
+  }
+}

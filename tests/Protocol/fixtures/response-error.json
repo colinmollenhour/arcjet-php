@@ -1,0 +1,26 @@
+{
+  "message": "DecideResponse",
+  "value": {
+    "decision": {
+      "conclusion": "CONCLUSION_ERROR",
+      "id": "lreq_fixture_error",
+      "reason": {
+        "error": {
+          "message": "Fixture upstream error"
+        }
+      },
+      "ruleResults": [
+        {
+          "conclusion": "CONCLUSION_ERROR",
+          "reason": {
+            "error": {
+              "message": "Fixture upstream error"
+            }
+          },
+          "ruleId": "fixture-rule",
+          "state": "RULE_STATE_NOT_RUN"
+        }
+      ]
+    }
+  }
+}

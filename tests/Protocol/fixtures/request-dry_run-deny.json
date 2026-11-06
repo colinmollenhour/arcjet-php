@@ -1,0 +1,62 @@
+{
+  "message": "DecideRequest",
+  "value": {
+    "characteristics": [
+      "ip.src",
+      "userId"
+    ],
+    "details": {
+      "body": "AHNub3dtYW46IOKYg/8=",
+      "cookies": "session=fixture",
+      "correlationId": "fixture-correlation",
+      "extra": {
+        "tenant": "example",
+        "userId": "fixture-user"
+      },
+      "headers": {
+        "accept": "application/json",
+        "authorization": "<redacted>",
+        "user-agent": "curl/8.0.0"
+      },
+      "host": "example.test",
+      "ip": "203.0.113.42",
+      "method": "POST",
+      "path": "/search/☃",
+      "protocol": "https:",
+      "query": "?q=arcjet&sort=asc",
+      "rawPath": "/search/%E2%98%83"
+    },
+    "localWarnings": [
+      {
+        "code": "fixture",
+        "message": "Offline contract example"
+      }
+    ],
+    "metadataJson": {
+      "attempt": "1",
+      "feature": "\"fixture\""
+    },
+    "rules": [
+      {
+        "shield": {
+          "characteristics": [
+            "ip.src",
+            "http.host"
+          ],
+          "mode": "MODE_DRY_RUN"
+        }
+      },
+      {
+        "botV2": {
+          "deny": [
+            "CATEGORY:SEARCH_ENGINE",
+            "CURL",
+            "SIGNED_BOT:https://bots.example.test/directory"
+          ],
+          "mode": "MODE_DRY_RUN"
+        }
+      }
+    ],
+    "sdkVersion": "0.1.0-fixture"
+  }
+}

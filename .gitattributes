@@ -1,4 +1,6 @@
 * text=auto eol=lf
+*.bin binary
+/src/Internal/Proto/** linguist-generated=true whitespace=-blank-at-eof
 /.github export-ignore
 /.tmp export-ignore
 /arcjet-py export-ignore

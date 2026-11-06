@@ -1,0 +1,28 @@
+{
+  "message": "DecideResponse",
+  "value": {
+    "decision": {
+      "conclusion": "CONCLUSION_DENY",
+      "id": "lreq_fixture_shield-deny",
+      "reason": {
+        "shield": {
+          "shieldTriggered": true,
+          "suspicious": true
+        }
+      },
+      "ruleResults": [
+        {
+          "conclusion": "CONCLUSION_DENY",
+          "reason": {
+            "shield": {
+              "shieldTriggered": true,
+              "suspicious": true
+            }
+          },
+          "ruleId": "fixture-rule",
+          "state": "RULE_STATE_RUN"
+        }
+      ]
+    }
+  }
+}

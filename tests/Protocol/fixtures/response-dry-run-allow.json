@@ -1,0 +1,40 @@
+{
+  "message": "DecideResponse",
+  "value": {
+    "decision": {
+      "conclusion": "CONCLUSION_ALLOW",
+      "id": "lreq_fixture_dry-run-allow",
+      "reason": {
+        "botV2": {
+          "allowed": [
+            "GOOGLE_CRAWLER"
+          ],
+          "denied": [
+            "CURL"
+          ],
+          "spoofed": true,
+          "verified": true
+        }
+      },
+      "ruleResults": [
+        {
+          "conclusion": "CONCLUSION_DENY",
+          "reason": {
+            "botV2": {
+              "allowed": [
+                "GOOGLE_CRAWLER"
+              ],
+              "denied": [
+                "CURL"
+              ],
+              "spoofed": true,
+              "verified": true
+            }
+          },
+          "ruleId": "fixture-rule",
+          "state": "RULE_STATE_DRY_RUN"
+        }
+      ]
+    }
+  }
+}
