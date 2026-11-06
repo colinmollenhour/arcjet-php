@@ -30,8 +30,8 @@ final class Validation
             throw new \InvalidArgumentException($name . ' must be a list.');
         }
         foreach ($values as $value) {
-            if (!is_string($value) || $value === '' || preg_match('/[\x00-\x20\x7f]/', $value)) {
-                throw new \InvalidArgumentException($name . ' must contain nonempty strings without whitespace/control characters.');
+            if (!is_string($value) || $value === '' || preg_match('//u', $value) !== 1 || preg_match('/[\x00-\x20\x7f]/', $value)) {
+                throw new \InvalidArgumentException($name . ' must contain nonempty UTF-8 strings without whitespace/control characters.');
             }
         }
     }

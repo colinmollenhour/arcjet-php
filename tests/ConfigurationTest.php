@@ -25,11 +25,14 @@ final class ConfigurationTest extends SdkTestCase
         yield 'bad bot id' => [BotProtection::class, ['allow' => ['a bot']]];
         yield 'non-string bot id' => [BotProtection::class, ['allow' => [42]]];
         yield 'non-list bot ids' => [BotProtection::class, ['allow' => ['bot' => 'CURL']]];
+        yield 'invalid UTF8 allow bot id' => [BotProtection::class, ['allow' => ["\xff"]]];
+        yield 'invalid UTF8 deny bot id' => [BotProtection::class, ['deny' => ["\xc3"]]];
         yield 'bare signed bot' => [BotProtection::class, ['allow' => ['SIGNED_BOT']]];
         foreach (['http://example.test/.well-known/http-message-signatures-directory', 'https://example.test/wrong', 'https://example.test/.well-known/http-message-signatures-directory?x=y', 'https://example.test/.well-known/http-message-signatures-directory#x', 'https://user:password@example.test/.well-known/http-message-signatures-directory', 'https://example.test/.well-known/http-message-signatures-directory/'] as $index => $url) {
             yield 'signed URL ' . $index => [BotProtection::class, ['allow' => ['SIGNED_BOT:' . $url]]];
         }
         yield 'bad characteristics' => [Shield::class, ['characteristics' => ['']]];
+        yield 'invalid UTF8 characteristics' => [Shield::class, ['characteristics' => ["ip.\xff"]]];
         yield 'bad base HTTP' => [Options::class, ['baseUrl' => 'http://decide.arcjet.com']];
         yield 'bad base relative' => [Options::class, ['baseUrl' => '/decide']];
         yield 'bad base userinfo' => [Options::class, ['baseUrl' => 'https://key@decide.arcjet.com']];
@@ -80,6 +83,14 @@ final class ConfigurationTest extends SdkTestCase
         } catch (\InvalidArgumentException $error) {
             self::assertStringNotContainsString('secret', $error->getMessage());
         }
+    }
+
+    public function testValidUnicodeAndFutureOpaqueConfigurationStringsRemainAccepted(): void
+    {
+        $identifiers = ['FUTURE:My-Bot', 'CATEGORY:FUTURE_CATEGORY', '未来:机器人'];
+        self::assertSame($identifiers, (new BotProtection(allow: $identifiers))->allow);
+        self::assertSame(['未来Bot'], (new BotProtection(deny: ['未来Bot']))->deny);
+        self::assertSame(['ip.src', '属性'], (new Shield(characteristics: ['ip.src', '属性']))->characteristics);
     }
 
     public function testInvalidRuleObjectsAreRejectedAtConstruction(): void

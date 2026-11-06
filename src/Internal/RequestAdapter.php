@@ -65,7 +65,7 @@ final readonly class RequestAdapter
             ->setIp($ip)
             ->setMethod($request->getMethod())
             ->setProtocol($uri->getScheme())
-            ->setHost($host)
+            ->setHost(HttpMetadata::headerValue($host))
             ->setPath(HttpMetadata::substituteInvalid(rawurldecode($path)))
             ->setRawPath($rawPath)
             ->setQuery($wireQuery)

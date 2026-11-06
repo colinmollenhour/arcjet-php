@@ -17,6 +17,34 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class MetadataNormalizationTest extends SdkTestCase
 {
+    /** @return iterable<string, array{string, string}> */
+    public static function uriHosts(): iterable
+    {
+        yield 'Latin1 host' => ["caf\xe9.test", 'café.test'];
+        yield 'Latin1 host with port' => ["caf\xe9.test:8443", 'café.test:8443'];
+        yield 'UTF8 host' => ['café.test', 'café.test'];
+        yield 'UTF8 host with port' => ['café.test:8443', 'café.test:8443'];
+        yield 'IPv6 host' => ['[2001:db8::1]', '[2001:db8::1]'];
+        yield 'IPv6 host with port' => ['[2001:db8::1]:8443', '[2001:db8::1]:8443'];
+    }
+
+    #[DataProvider('uriHosts')]
+    public function testUriHostNormalizationReachesRemoteDenyEvenWithFailOpen(string $authority, string $expected): void
+    {
+        $request = new ServerRequest('GET', 'https://' . $authority . '/', [], null, '1.1', ['REMOTE_ADDR' => '198.51.100.42']);
+        $http = new FakeHttpClient(static fn (): ResponseInterface => self::response((new Proto\Decision())->setConclusion(Proto\Conclusion::CONCLUSION_DENY)));
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::never())->method('handle');
+        $response = (new ArcjetMiddleware($this->sdk($http), new Psr17Factory(), failOpen: true))->process($request, $handler);
+        self::assertSame(403, $response->getStatusCode());
+        self::assertCount(1, $http->requests);
+        $details = self::decodeRequest($http->requests[0])->getDetails();
+        self::assertNotNull($details);
+        self::assertSame($expected, $details->getHost());
+        self::assertSame($expected, $details->getHeaders()['host']);
+        self::assertSame($authority, $request->getHeaderLine('Host'));
+    }
+
     public function testRealNyholmNumericHeaderNameReachesRemoteProtection(): void
     {
         $request = $this->request()->withHeader('123', 'test');

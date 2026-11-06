@@ -18,6 +18,8 @@ The source reference is [arcjet-py 1.5.0, revision `498b28b17ebc1a652974ab8ae98c
 
 Generated PHP code uses protoc 36.2 with the matching PHP runtime floor 5.36.2. The separate Python 6.33.2 tooling pin supports offline descriptor/fixture work; it is not the PHP runtime version. See [Protobuf's language-specific version mapping](https://protobuf.dev/support/version-support/#numbering) and [cross-version runtime guarantee](https://protobuf.dev/support/cross-version-runtime-guarantee/).
 
+The validated profile uses the pure-PHP Composer runtime without native `ext-protobuf`. A preloaded extension supplies its own classes and version; this port has not validated that path. Disable it to reproduce the documented checks. The Composer package constraint does not validate a loaded native extension's compatibility.
+
 ## Deliberate differences from Python
 
 | Behavior | PHP contract and cost |

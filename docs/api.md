@@ -115,7 +115,7 @@ Exactly one of `allow` or `deny` must be non-null.
 | `deny: []` | Rejected. Empty allow and empty deny have indistinguishable repeated fields on the upstream wire protocol. Omit the Bot Protection rule to disable it. |
 | Both lists or neither list | Rejected. |
 
-Identifiers are nonempty opaque strings without whitespace or control characters. Validation is deliberately permissive for future service identifiers: it does not enforce uppercase names or a `[A-Z][A-Z0-9_]*` pattern. For example, `FUTURE:My-Bot` is accepted locally. The service determines whether an identifier is recognized; spelling and case mistakes are not necessarily rejected by the constructor. Signed-bot identifiers have the additional checks below.
+Identifiers are nonempty opaque UTF-8 strings without whitespace or control characters. Invalid UTF-8 configuration is rejected at construction, including Shield characteristics. Validation is deliberately permissive for future service identifiers: it does not enforce uppercase names or a `[A-Z][A-Z0-9_]*` pattern. For example, `FUTURE:My-Bot` is accepted locally. The service determines whether an identifier is recognized; spelling and case mistakes are not necessarily rejected by the constructor. Signed-bot identifiers have the additional checks below.
 
 Source-known categories are `ACADEMIC`, `ADVERTISING`, `AI`, `AMAZON`, `APPLE`, `ARCHIVE`, `BOTNET`, `FEEDFETCHER`, `GOOGLE`, `META`, `MICROSOFT`, `MONITOR`, `OPTIMIZER`, `PREVIEW`, `PROGRAMMATIC`, `SEARCH_ENGINE`, `SLACK`, `SOCIAL`, `TOOL`, `UNKNOWN`, `VERCEL`, `WEBHOOK`, and `YAHOO`. Prefix each with `CATEGORY:`.
 
