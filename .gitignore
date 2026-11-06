@@ -5,3 +5,4 @@
 /.phpstan-cache/
 /composer.phar
 /.env
+/ARCJET_KEY.txt
