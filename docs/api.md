@@ -70,7 +70,7 @@ Each parameter is a readonly public property.
 
 The whole serialized protection request has a separate fixed 1 MiB cap. The limits do not impose a portable memory or wall-clock bound on the injected HTTP client's own response buffering. Configure the transport's timeouts and resource limits separately.
 
-The [README transport example](../README.md#protect-an-http-request) uses Symfony's PSR-18 adapter with TLS verification, bounded inactivity and overall timeouts, and `max_redirects: 0`. PSR-18 itself has no settings for these requirements. A redirected request or unverified TLS connection can disclose the key; the deadline header alone cannot stop a blocked worker.
+The [README transport example](../README.md#protect-an-http-request) uses Symfony's PSR-18 adapter with TLS verification, bounded inactivity and overall timeouts, and `max_redirects: 0`. PSR-18 itself has no settings for these requirements. A redirected request or unverified TLS connection can disclose the key; the deadline header alone cannot stop a blocked worker. The authenticated runs used longer budgets, not the default deadline or example transport timeouts.
 
 ### Remote transport
 
@@ -124,6 +124,8 @@ A signed-bot identifier has the form `SIGNED_BOT:https://example.com/.well-known
 ### Shield WAF
 
 `characteristics` is a list of nonempty strings without whitespace or control characters, forwarded to the service. An empty list leaves service defaults in effect. This SDK does not interpret those expressions or implement a local WAF engine.
+
+Shield analyzes request headers and query metadata, not request bodies; `includeBody` only enables the SDK's generic body forwarding. See the [official Shield body limitation](https://docs.arcjet.com/limitations/#shield-analysis-does-not-use-the-request-body) and [observed live validation scope](live-validation.md).
 
 ### Mode
 
@@ -194,7 +196,7 @@ Transport exceptions, non-200 HTTP responses, malformed or oversized responses, 
 
 | `FailureKind` case / value | Origin | Eligible with middleware `failOpen: true` |
 | --- | --- | --- |
-| `Request` / `'REQUEST'` | Refused request adaptation, IP/correlation validation, opted-in body inspection, secret disclosure, or request-size limit. | No; HTTP 503. |
+| `Request` / `'REQUEST'` | Refused request adaptation, IP/correlation validation, opted-in body reading, secret disclosure, or request-size limit. | No; HTTP 503. |
 | `Internal` / `'INTERNAL'` | Preparation/runtime failures, unexpected exceptions, or a PSR-18 client rejecting the SDK's prepared request. | No; HTTP 503. |
 | `Transport` / `'TRANSPORT'` | Explicit PSR-18 `ClientExceptionInterface` from `sendRequest()`, except `RequestExceptionInterface`. | Yes; only with explicit fail-open. |
 | `Service` / `'SERVICE'` | Service HTTP/protocol validation failures or a decoded aggregate service ERROR. | Yes; only with explicit fail-open. |
@@ -283,14 +285,16 @@ The remote service receives the following projection of the incoming request, al
 | `headers` | Lowercased header names and joined values. Valid UTF-8 values are preserved; otherwise each value is interpreted as Latin-1 and converted to UTF-8. All unredacted headers are sent, including forwarding, signature, session, and custom-secret headers. Values join with `, `, except Cookie values join with `; `. |
 | `cookies` | Joined Cookie header after the same text normalization, duplicated from the header map. Adding `Cookie` to `redactHeaders` omits it from both fields. Cookies are not parsed or individually redacted. |
 | `correlation_id` | Explicit argument only, if provided. |
-| `extra` | Always includes `arcjet_disable_automatic_ip_detection = "true"`, a reporting marker matching Python's manual-IP mode. Its service-side effect has not been verified; strict local IP selection does not depend on it. |
+| `extra` | Always includes `arcjet_disable_automatic_ip_detection = "true"`, a reporting marker matching Python's manual-IP mode. Live checks observed selected-IP projection and matching enrichment, not the marker's independent service-side effect; strict local IP selection does not depend on it. |
 | `body` | Excluded by default. With `includeBody: true`, exact bytes read from the beginning of the stream, within `maxBodyBytes`. Parsed body objects and uploaded-file objects are not serialized separately. |
 
 `Authorization` and `Proxy-Authorization` never enter the metadata. Additional header redaction applies only to headers; it does not scrub the query, path, or opted-in body. The SDK refuses a projected request containing its site key, but this is not general secret detection. Review all disclosure before sending production traffic. The incoming request's headers and URI remain unchanged.
 
 Raw-target candidates must be origin-form, start with `/`, and contain only printable non-space ASCII without `#`. Invalid or unavailable candidates are skipped; if none is usable, `raw_path` can be empty. Header/path text normalization affects the disclosed copy only; opted-in body bytes are not normalized.
 
-Default body exclusion does not read or consume the body stream. Opt-in reading requires a readable, seekable stream, saves its original position, reads from the beginning, and restores that position in a `finally` block, including after an inspection failure. A stream that cannot support this contract returns `ERROR`; the SDK does not consume a nonseekable body or silently send a truncated body.
+Default body exclusion does not read or consume the body stream. Opt-in reading requires a readable, seekable stream, saves its original position, reads from the beginning, and restores that position in a `finally` block, including after a body-reading failure. A stream that cannot support this contract returns `ERROR`; the SDK does not consume a nonseekable body or silently send a truncated body.
+
+The optional `body` field is a generic protobuf projection, not a promise that a configured rule analyzes those bytes. In particular, forwarding a body does not enable Shield body analysis. The [live body check](live-validation.md#observed-outcomes) establishes transport and stream preservation only.
 
 Oversized, unreadable, or nonseekable opted-in bodies always produce a request failure and middleware HTTP 503, even with `failOpen: true`; metadata-only evaluation is not substituted. The default cap is 64 KiB. For upload routes, choose a route-specific body-disclosure policy or raise `maxBodyBytes` up to 1 MiB, allowing room for metadata within the separate 1 MiB whole-protocol cap. Raising the body cap to 1 MiB does not guarantee that a 1 MiB body plus metadata fits.
 
