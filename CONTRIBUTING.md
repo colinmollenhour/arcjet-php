@@ -2,10 +2,11 @@
 
 ## Run the checks
 
-Use PHP 8.4 or later and Composer 2. From the repository root, run:
+Use PHP 8.4 or later, Composer 2, and the runtime extensions `ctype`, `filter`, and `json`; PHPUnit also needs its declared development extensions. From the repository root, run:
 
 ```bash
 composer install
+composer check-platform-reqs
 composer check
 ```
 

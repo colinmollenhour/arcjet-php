@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Arcjet\Internal;
 
+use Arcjet\FailureKind;
+
 use Psr\Http\Message\ServerRequestInterface;
 
 /** @internal */
@@ -57,33 +59,36 @@ final class IpAddress
     {
         if ($override !== null) {
             if (!self::isValid($override)) {
-                throw new ProtectionException('invalid_ip', 'The application IP override is invalid.');
+                throw new ProtectionException('invalid_ip', 'The application IP override is invalid.', FailureKind::Request);
             }
             return $override;
         }
         $peer = $request->getServerParams()['REMOTE_ADDR'] ?? null;
         if (!is_string($peer) || !self::isValid($peer)) {
-            throw new ProtectionException('invalid_ip', 'A valid REMOTE_ADDR or explicit application IP override is required.');
+            throw new ProtectionException('invalid_ip', 'A valid REMOTE_ADDR or explicit application IP override is required.', FailureKind::Request);
         }
         if (!self::trusted($peer, $trustedProxies) || !$request->hasHeader('X-Forwarded-For')) {
             return $peer;
         }
         $header = $request->getHeaderLine('X-Forwarded-For');
         if (strlen($header) > 8192) {
-            throw new ProtectionException('invalid_forwarded_ip', 'The trusted proxy forwarding chain is too large.');
+            throw new ProtectionException('invalid_forwarded_ip', 'The trusted proxy forwarding chain is too large.', FailureKind::Request);
         }
         $chain = explode(',', $header);
         if (count($chain) > 64) {
-            throw new ProtectionException('invalid_forwarded_ip', 'The trusted proxy forwarding chain is too large.');
+            throw new ProtectionException('invalid_forwarded_ip', 'The trusted proxy forwarding chain is too large.', FailureKind::Request);
         }
-        // Only walk while the current hop is trusted. Left-hand spoofed entries
-        // are never selected or interpreted once an untrusted hop is reached.
-        for ($i = count($chain) - 1; $i >= 0 && self::trusted($peer, $trustedProxies); --$i) {
+        // The direct peer is already trusted by the precheck above. Stop at the
+        // first untrusted candidate, before interpreting any left-hand entries.
+        for ($i = count($chain) - 1; $i >= 0; --$i) {
             $candidate = trim($chain[$i], " \t");
             if (!self::isValid($candidate)) {
-                throw new ProtectionException('invalid_forwarded_ip', 'The trusted proxy forwarding chain contains an invalid IP.');
+                throw new ProtectionException('invalid_forwarded_ip', 'The trusted proxy forwarding chain contains an invalid IP.', FailureKind::Request);
             }
             $peer = $candidate;
+            if (!self::trusted($peer, $trustedProxies)) {
+                return $peer;
+            }
         }
         return $peer;
     }

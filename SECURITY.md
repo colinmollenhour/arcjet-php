@@ -13,6 +13,7 @@ This community PHP port is not an official Arcjet SDK. Report problems in this l
 - Configure outbound timeouts in your HTTP client. PSR-18 does not define a portable timeout option.
 - Trust forwarding headers only when the direct peer is a configured trusted proxy. Restrict direct access to the application behind that proxy.
 - Treat IP and bot intelligence as risk signals, not as authentication or authorization.
-- Decide explicitly how your application handles unavailable protection. An error is not proof that a request is safe.
+- Decide explicitly how your application handles unavailable protection. An error is not proof that a request is safe. Middleware fail-open is limited to classified transport/service failures; request failures, internal failures, and unclassified errors remain HTTP 503.
+- Opted-in body inspection is strict: oversized, unreadable, or nonseekable bodies return ERROR and middleware HTTP 503 even with fail-open. Size the body cap and route-level disclosure policy for uploads; the SDK never silently omits or truncates an opted-in body to claim successful inspection.
 
 See the README and API documentation for this SDK's data handling and decision behavior.

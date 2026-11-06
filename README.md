@@ -6,7 +6,7 @@ Arcjet PHP adds remote Bot Protection, Shield web application firewall (WAF), an
 
 ## Install from a local checkout
 
-The Composer package name is `arcjet/arcjet-php`. No published Packagist release or hosted PHP repository is assumed. In your application's Composer project, register your local checkout and install a real HTTP client and PSR factories:
+Requires PHP 8.4+, Composer 2, and the `ctype`, `filter`, and `json` PHP extensions. The Composer package name is `arcjet/arcjet-php`. No published Packagist release or hosted PHP repository is assumed. In your application's Composer project, register your local checkout and install a real HTTP client and PSR factories:
 
 ```sh
 composer config repositories.arcjet-php path /ABSOLUTE/PATH/TO/arcjet-php
@@ -14,6 +14,8 @@ composer require 'arcjet/arcjet-php:@dev' symfony/http-client nyholm/psr7 nyholm
 ```
 
 `nyholm/psr7-server` creates the incoming request in the quickstart. Applications that already provide a PSR-7 server request do not need it. The SDK requires an injected PSR-18 HTTP client and PSR-17 request and stream factories; it does not bundle or discover an HTTP implementation.
+
+Run `composer check-platform-reqs --no-dev` on the deployment runtime; do not bypass missing extension requirements. For autoload-time extension checks, set `composer config platform-check true` in the application and regenerate its autoloader with `composer dump-autoload`.
 
 ## Protect an HTTP request
 
@@ -79,7 +81,9 @@ For a local check, run `php -S 127.0.0.1:8080 protect.php`, then visit `http://1
 
 The HTTP client's `timeout` bounds inactivity, including connection establishment; `max_duration` bounds the total request. TLS verification and disabled redirects protect the outbound credential. The SDK's separate `Connect-Timeout-Ms` header is **not** a local transport timeout.
 
-Both rules above explicitly use `Mode::Live`. The deliberate PHP default is `Mode::DryRun`: inspect the aggregate decision, not individual rule denials. `ERROR` is neither allowed nor denied. PSR-15 middleware is available with fail-closed defaults; see the [API reference](docs/api.md#psr-15-middleware).
+The default service deadline is 500 ms. Short budgets limit added latency but can turn transient slowness into HTTP 503 under this example's fail-closed policy; longer budgets occupy PHP workers for longer. Tune `Options::deadlineMs` and the transport timeouts together using observed service latency and your application's availability budget.
+
+Both rules above explicitly use `Mode::Live`. The deliberate PHP default is `Mode::DryRun`: inspect the aggregate decision, not individual rule denials. `ERROR` is neither allowed nor denied. PSR-15 middleware defaults to fail-closed; optional fail-open applies only to classified transport/service errors, never request/internal failures. See the [API reference](docs/api.md#psr-15-middleware).
 
 ## Run the examples
 

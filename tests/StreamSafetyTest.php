@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Arcjet\Tests;
 
 use Arcjet\Options;
+use Arcjet\FailureKind;
 use Arcjet\Reason\ErrorReason;
 use Arcjet\Tests\Support\FakeHttpClient;
 use Arcjet\Tests\Support\SdkTestCase;
@@ -43,7 +44,10 @@ final class StreamSafetyTest extends SdkTestCase
         $body->method('eof')->willReturn(false);
         $body->expects(self::once())->method('close');
         $http = new FakeHttpClient(static fn (): ResponseInterface => (new Response(200, ['Content-Type' => 'application/proto']))->withBody($body));
-        self::assertTrue($this->sdk($http)->protect($this->request())->isErrored());
+        $decision = $this->sdk($http)->protect($this->request());
+        self::assertTrue($decision->isErrored());
+        self::assertSame(FailureKind::Service, $decision->failureKind);
+        self::assertTrue($decision->isFailOpenEligible());
     }
 
     public function testReadFailureRestoresOptedInRequestBodyPointer(): void

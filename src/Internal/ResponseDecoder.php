@@ -6,6 +6,7 @@ namespace Arcjet\Internal;
 
 use Arcjet\Conclusion;
 use Arcjet\Decision;
+use Arcjet\FailureKind;
 use Arcjet\Internal\Proto;
 use Arcjet\IpDetails;
 use Arcjet\Reason\BotReason;
@@ -23,25 +24,27 @@ final class ResponseDecoder
     public static function decode(string $bytes): Decision
     {
         $response = new Proto\DecideResponse();
+        ProtobufGuard::validate($bytes, \Google\Protobuf\DescriptorPool::getGeneratedPool()->getDescriptorByClassName(Proto\DecideResponse::class));
         try {
-            ProtobufGuard::validate($bytes, \Google\Protobuf\DescriptorPool::getGeneratedPool()->getDescriptorByClassName(Proto\DecideResponse::class));
             $response->mergeFromString($bytes);
-        } catch (\Throwable) {
-            throw new ProtectionException('malformed_response', 'Arcjet returned malformed protobuf.');
+        } catch (\Exception) {
+            // At this narrow boundary protobuf reports invalid service bytes as
+            // Exception. Programming/runtime Errors still fail closed as Internal.
+            throw new ProtectionException('malformed_response', 'Arcjet returned malformed protobuf.', FailureKind::Service);
         }
         $decision = $response->getDecision();
         if ($decision === null) {
-            throw new ProtectionException('missing_decision', 'Arcjet returned no decision.');
+            throw new ProtectionException('missing_decision', 'Arcjet returned no decision.', FailureKind::Service);
         }
         $conclusion = Conclusion::tryFrom($decision->getConclusion());
         if ($conclusion === null || $conclusion === Conclusion::Unspecified) {
-            throw new ProtectionException('invalid_conclusion', 'Arcjet returned an unknown or unspecified decision conclusion.');
+            throw new ProtectionException('invalid_conclusion', 'Arcjet returned an unknown or unspecified decision conclusion.', FailureKind::Service);
         }
         $results = [];
         foreach ($decision->getRuleResults() as $result) {
             $ruleConclusion = Conclusion::tryFrom($result->getConclusion());
             if ($ruleConclusion === null) {
-                throw new ProtectionException('invalid_conclusion', 'Arcjet returned an unknown rule conclusion.');
+                throw new ProtectionException('invalid_conclusion', 'Arcjet returned an unknown rule conclusion.', FailureKind::Service);
             }
             $results[] = new RuleResult(
                 $result->getRuleId(),
@@ -55,6 +58,7 @@ final class ResponseDecoder
         return new Decision(
             $decision->getId(), $conclusion, self::reason($decision->getReason()), $results,
             self::ip($decision->getIpDetails()), $decision->getTtl(),
+            $conclusion === Conclusion::Error ? FailureKind::Service : null,
         );
     }
 

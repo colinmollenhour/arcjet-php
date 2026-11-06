@@ -22,7 +22,7 @@ final readonly class ArcjetMiddleware implements MiddlewareInterface
     {
         $decision = $this->arcjet->protect($request);
         if ($decision->isErrored()) {
-            if (!$this->failOpen) {
+            if (!$this->failOpen || !$decision->isFailOpenEligible()) {
                 return $this->responseFactory->createResponse(503)->withHeader('Cache-Control', 'no-store');
             }
         } elseif (!$decision->isAllowed()) {

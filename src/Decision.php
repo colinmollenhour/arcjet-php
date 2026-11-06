@@ -17,6 +17,7 @@ final readonly class Decision
         public array $results = [],
         public ?IpDetails $ip = null,
         public int $ttl = 0,
+        public ?FailureKind $failureKind = null,
     ) {}
 
     /** Strictly ALLOW; errors and challenges need an explicit application policy. */
@@ -26,9 +27,15 @@ final readonly class Decision
     public function isErrored(): bool { return $this->conclusion === Conclusion::Error; }
     public function hasIpDetails(): bool { return $this->ip !== null; }
 
-    /** @internal */
-    public static function error(string $code, string $message): self
+    /** Only operational errors are eligible; this never relabels ERROR as ALLOW. */
+    public function isFailOpenEligible(): bool
     {
-        return new self('', Conclusion::Error, new ErrorReason($message, $code));
+        return $this->isErrored() && ($this->failureKind === FailureKind::Transport || $this->failureKind === FailureKind::Service);
+    }
+
+    /** @internal */
+    public static function error(string $code, string $message, FailureKind $failureKind): self
+    {
+        return new self('', Conclusion::Error, new ErrorReason($message, $code), failureKind: $failureKind);
     }
 }

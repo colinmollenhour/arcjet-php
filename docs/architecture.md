@@ -26,11 +26,13 @@ A client IP is security-sensitive input. An arbitrary visitor can supply forward
 
 Request metadata leaves the application for evaluation. Limiting disclosed data reduces exposure but can also reduce what the service can inspect. Bodies are excluded by default; body inspection and signed request verification require deliberate consideration of exact bytes, body size, and the HTTP stream's behavior. See the API reference for the actual request projection and configuration options.
 
+Opting into body inspection is strict: an oversized or unsafe-to-read body produces an error rather than a successful result from silently reduced inspection. This can reject large uploads unless the application deliberately configures its body cap or route policy. Request-local failures do not qualify for outage fail-open.
+
 ## Decisions are not authentication
 
 IP intelligence describes risk and network context; it does not establish identity. Missing enrichment is unavailable information, not a clean bill of health. Bot classifications and WAF results likewise complement rather than replace application authorization.
 
-An ERROR conclusion records unavailable or invalid protection, not successful inspection. Applications choose their error-handling policy explicitly. DRY_RUN results are observations; the aggregate service decision remains authoritative rather than being reconstructed from individual rule conclusions.
+An ERROR conclusion records unavailable or invalid protection, not successful inspection. Typed failure origins distinguish request-local and internal problems from operational transport or service failures. The middleware's optional fail-open policy applies only to explicit operational errors; request-local, internal, and unclassified errors remain closed. DRY_RUN results are observations; the aggregate service decision remains authoritative rather than being reconstructed from individual rule conclusions.
 
 ## Verification boundary
 

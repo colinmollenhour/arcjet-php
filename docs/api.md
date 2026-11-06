@@ -64,7 +64,7 @@ Each parameter is a readonly public property.
 | `deadlineMs` | Integer from 1 through 9,999,999,999. Sent as `Connect-Timeout-Ms`; it does **not** enforce a local deadline. |
 | `trustedProxies` | List of exact IPv4/IPv6 addresses or CIDRs. Empty means no proxy is trusted. Invalid entries throw. See [IP address extraction](#ip-address-extraction). |
 | `includeBody` | Opt-in disclosure of the exact request body bytes. Default `false` leaves the body unread. See [request disclosure](#request-disclosure). |
-| `maxBodyBytes` | Inclusive request-body byte limit, 0 through 1,048,576. Oversized bodies fail rather than truncate. |
+| `maxBodyBytes` | Inclusive request-body byte limit, 0 through 1,048,576; default 65,536 (64 KiB). Oversized opted-in bodies return `ERROR`, never a truncated/omitted-body success. |
 | `maxResponseBytes` | Inclusive response-body byte limit, 1 through 1,048,576. Oversized responses return `ERROR`. |
 | `redactHeaders` | List of additional HTTP header names to omit, case-insensitively. `Authorization` and `Proxy-Authorization` are always omitted. |
 
@@ -115,7 +115,7 @@ Exactly one of `allow` or `deny` must be non-null.
 | `deny: []` | Rejected. Empty allow and empty deny have indistinguishable repeated fields on the upstream wire protocol. Omit the Bot Protection rule to disable it. |
 | Both lists or neither list | Rejected. |
 
-Identifiers accept uppercase bot names matching `[A-Z][A-Z0-9_]*`, `CATEGORY:` followed by that pattern, or a signed-bot directory identifier. The service determines whether a category or bot name is recognized; constructor validation does not guarantee service support.
+Identifiers are nonempty opaque strings without whitespace or control characters. Validation is deliberately permissive for future service identifiers: it does not enforce uppercase names or a `[A-Z][A-Z0-9_]*` pattern. For example, `FUTURE:My-Bot` is accepted locally. The service determines whether an identifier is recognized; spelling and case mistakes are not necessarily rejected by the constructor. Signed-bot identifiers have the additional checks below.
 
 Source-known categories are `ACADEMIC`, `ADVERTISING`, `AI`, `AMAZON`, `APPLE`, `ARCHIVE`, `BOTNET`, `FEEDFETCHER`, `GOOGLE`, `META`, `MICROSOFT`, `MONITOR`, `OPTIMIZER`, `PREVIEW`, `PROGRAMMATIC`, `SEARCH_ENGINE`, `SLACK`, `SOCIAL`, `TOOL`, `UNKNOWN`, `VERCEL`, `WEBHOOK`, and `YAHOO`. Prefix each with `CATEGORY:`.
 
@@ -144,6 +144,7 @@ new Arcjet\Decision(
     array $results = [],
     ?Arcjet\IpDetails $ip = null,
     int $ttl = 0,
+    ?Arcjet\FailureKind $failureKind = null,
 );
 
 new Arcjet\RuleResult(
@@ -157,6 +158,8 @@ new Arcjet\RuleResult(
 ```
 
 Every constructor parameter is a readonly public property. `Decision::$results` is a list of `RuleResult`. IDs can be empty when absent from the response. `ttl` is the service's lifetime in seconds, not evidence of a local cache. A result's nullable `fingerprint` is service-supplied; PHP does not generate one locally.
+
+`Decision::$failureKind` classifies an ERROR's origin independently of its reason/message. Successful decoded non-ERROR decisions have `null`; decoded aggregate service ERROR decisions have `FailureKind::Service`. The constructor defaults to `null`, so manually constructed, unclassified errors remain fail-closed.
 
 Both types expose `isAllowed(): bool`, `isDenied(): bool`, `isChallenged(): bool`, and `isErrored(): bool`. Each matches exactly one conclusion; **an ERROR is neither allowed nor denied**. Checking only `!$decision->isDenied()` is not a complete protection policy. `Decision` also exposes `hasIpDetails(): bool`.
 
@@ -187,22 +190,36 @@ Invalid site keys, rules, options, and proxy configuration throw `InvalidArgumen
 
 Transport exceptions, non-200 HTTP responses, malformed or oversized responses, unexpected response types, missing decisions, and unknown/unspecified aggregate conclusions also return `ERROR`. A synthetic failure has an empty `id`, `ttl = 0`, no IP details, and an `ErrorReason`. A valid service `ERROR` decision retains its returned fields. No automatic retries occur.
 
+`Decision::isFailOpenEligible(): bool` returns `true` only for an aggregate ERROR explicitly classified as `FailureKind::Transport` or `FailureKind::Service`. It is an eligibility check, not an ALLOW decision or an instruction to delegate. Request/internal failures and missing/unknown classifications are not eligible. Do not infer eligibility from `ErrorReason::$code` or its message.
+
+| `FailureKind` case / value | Origin | Eligible with middleware `failOpen: true` |
+| --- | --- | --- |
+| `Request` / `'REQUEST'` | Refused request adaptation, IP/correlation validation, opted-in body inspection, secret disclosure, or request-size limit. | No; HTTP 503. |
+| `Internal` / `'INTERNAL'` | Preparation/runtime failures, unexpected exceptions, or a PSR-18 client rejecting the SDK's prepared request. | No; HTTP 503. |
+| `Transport` / `'TRANSPORT'` | Explicit PSR-18 `ClientExceptionInterface` from `sendRequest()`, except `RequestExceptionInterface`. | Yes; only with explicit fail-open. |
+| `Service` / `'SERVICE'` | Service HTTP/protocol validation failures or a decoded aggregate service ERROR. | Yes; only with explicit fail-open. |
+| `null` | Unclassified origin, including a manually constructed ERROR without a kind. | No; HTTP 503. |
+
+An arbitrary exception from a misbehaving HTTP client, request/stream factory, or response stream is not automatically a transport outage. Unexpected failures remain `Internal`, even when they occur during sending/reading. This keeps application/programming failures outside the operational fail-open policy.
+
 Middleware does not log or expose raw service errors. The injected logger receives sanitized failure information only; application code remains responsible for protecting the diagnostic data on returned objects.
 
-| `ErrorReason::$code` | Condition and response |
-| --- | --- |
-| `invalid_ip` | Supply a valid server `REMOTE_ADDR` or trusted application IP override. |
-| `invalid_forwarded_ip` | Correct the trusted proxy's malformed or oversized forwarding chain. |
-| `invalid_correlation_id` | Use 1–256 printable ASCII bytes or omit the argument. |
-| `secret_in_request` | Remove the SDK key from incoming metadata or opted-in body. |
-| `request_body` | Use a readable, seekable body within the cap, or disable body disclosure. |
-| `request_too_large` | Reduce disclosed metadata/body to fit the fixed serialized-request cap. |
-| `response_too_large` | Response is unreadable, stalled, or exceeds the configured cap; investigate the service/transport. |
-| `http_status` | Service returned non-200. Check account/key configuration and service availability privately. |
-| `content_type`, `content_encoding` | Check for an incompatible endpoint, intermediary, or unsupported response compression. |
-| `malformed_response`, `missing_decision`, `invalid_conclusion` | Response violates the expected protocol. Do not treat it as an allow decision. |
-| `runtime_error` | Unexpected runtime or transport failure. Inspect transport configuration and private operational diagnostics. |
-| `remote_error` | Default code for a decoded service error reason; its message remains untrusted diagnostic data. |
+| `ErrorReason::$code` | SDK failure kind | Condition and response |
+| --- | --- | --- |
+| `invalid_ip` | `Request` | Supply a valid server `REMOTE_ADDR` or trusted application IP override. |
+| `invalid_forwarded_ip` | `Request` | Correct the trusted proxy's malformed or oversized forwarding chain. |
+| `invalid_correlation_id` | `Request` | Use 1–256 printable ASCII bytes or omit the argument. |
+| `secret_in_request` | `Request` | Remove the SDK key from incoming metadata or opted-in body. |
+| `request_body` | `Request` | Use a readable, seekable body within the cap, or choose a route policy excluding body disclosure. |
+| `request_too_large` | `Request` | Reduce disclosed metadata/body to fit the fixed serialized-request cap. |
+| `invalid_prepared_request` | `Internal` | The PSR-18 client rejected the prepared outbound request; investigate the SDK/client integration. |
+| `runtime_error` | `Internal` | Unexpected runtime, preparation, or arbitrary client/stream exception. Inspect private operational diagnostics; fail-open does not apply. |
+| `transport_error` | `Transport` | The PSR-18 client explicitly reported a failure to complete the outbound call. Check network/transport availability. |
+| `response_too_large` | `Service` | Response is unreadable, stalled, or exceeds the configured cap; investigate the service/transport. |
+| `http_status` | `Service` | Service returned non-200. Check account/key configuration and service availability privately. |
+| `content_type`, `content_encoding` | `Service` | Check for an incompatible endpoint, intermediary, or unsupported response compression. |
+| `malformed_response`, `missing_decision`, `invalid_conclusion` | `Service` | Response violates the expected protocol. Do not treat it as an allow decision. |
+| `remote_error` | `Service` for aggregate ERROR | Default code for a decoded service error reason; its message remains untrusted diagnostic data. A rule-level error reason alone does not set aggregate failure policy. |
 
 ## IP address extraction
 
@@ -260,20 +277,26 @@ The remote service receives the following projection of the incoming request, al
 | `method` | Incoming HTTP method. |
 | `protocol` | URI scheme, not the HTTP version. |
 | `host` | URI hostname, including a non-default port when present. |
-| `path`, `raw_path` | Percent-decoded URI path and original encoded URI path. |
-| `query` | Encoded URI query, including the leading `?` when nonempty. **No query-parameter redaction is provided.** |
-| `headers` | Lowercased header names and joined values. All unredacted headers are sent, including forwarding, signature, session, and custom-secret headers. Values join with `, `, except Cookie values join with `; `. |
-| `cookies` | Raw joined Cookie header, duplicated from the header map. Adding `Cookie` to `redactHeaders` omits it from both fields. Cookies are not parsed or individually redacted. |
+| `path` | Percent-decoded PSR-7 URI path; invalid UTF-8 sequences become U+FFFD replacement characters. |
+| `raw_path` | Encoded path selected from valid server `RAW_URI`, then `REQUEST_URI`, then the PSR-7 request target, then a valid URI path. Exact original bytes depend on the server/adapter preserving them. |
+| `query` | Encoded query from the selected raw target, otherwise the URI query; includes a leading `?` when nonempty. Invalid UTF-8 in a URI-query fallback is replaced. **No query-parameter redaction is provided.** |
+| `headers` | Lowercased header names and joined values. Valid UTF-8 values are preserved; otherwise each value is interpreted as Latin-1 and converted to UTF-8. All unredacted headers are sent, including forwarding, signature, session, and custom-secret headers. Values join with `, `, except Cookie values join with `; `. |
+| `cookies` | Joined Cookie header after the same text normalization, duplicated from the header map. Adding `Cookie` to `redactHeaders` omits it from both fields. Cookies are not parsed or individually redacted. |
 | `correlation_id` | Explicit argument only, if provided. |
+| `extra` | Always includes `arcjet_disable_automatic_ip_detection = "true"`, a reporting marker matching Python's manual-IP mode. Its service-side effect has not been verified; strict local IP selection does not depend on it. |
 | `body` | Excluded by default. With `includeBody: true`, exact bytes read from the beginning of the stream, within `maxBodyBytes`. Parsed body objects and uploaded-file objects are not serialized separately. |
 
 `Authorization` and `Proxy-Authorization` never enter the metadata. Additional header redaction applies only to headers; it does not scrub the query, path, or opted-in body. The SDK refuses a projected request containing its site key, but this is not general secret detection. Review all disclosure before sending production traffic. The incoming request's headers and URI remain unchanged.
 
+Raw-target candidates must be origin-form, start with `/`, and contain only printable non-space ASCII without `#`. Invalid or unavailable candidates are skipped; if none is usable, `raw_path` can be empty. Header/path text normalization affects the disclosed copy only; opted-in body bytes are not normalized.
+
 Default body exclusion does not read or consume the body stream. Opt-in reading requires a readable, seekable stream, saves its original position, reads from the beginning, and restores that position in a `finally` block, including after an inspection failure. A stream that cannot support this contract returns `ERROR`; the SDK does not consume a nonseekable body or silently send a truncated body.
+
+Oversized, unreadable, or nonseekable opted-in bodies always produce a request failure and middleware HTTP 503, even with `failOpen: true`; metadata-only evaluation is not substituted. The default cap is 64 KiB. For upload routes, choose a route-specific body-disclosure policy or raise `maxBodyBytes` up to 1 MiB, allowing room for metadata within the separate 1 MiB whole-protocol cap. Raising the body cap to 1 MiB does not guarantee that a 1 MiB body plus metadata fits.
 
 ### Signed-bot disclosure limits
 
-Signature headers such as `Signature`, `Signature-Input`, and `Signature-Agent` are forwarded unless explicitly redacted. `Authorization` remains excluded. The original encoded path is forwarded, but the protocol's string-valued header map folds repeated values rather than preserving arbitrary separate header lines. Body bytes are absent unless `includeBody` is enabled.
+Signature headers such as `Signature`, `Signature-Input`, and `Signature-Agent` are forwarded unless explicitly redacted. `Authorization` remains excluded. The best available encoded path is forwarded, but original-path fidelity depends on server/adapter metadata. Header encoding normalization and the protocol's string-valued header map can change signature-sensitive bytes; repeated values are folded rather than preserved as separate header lines. Body bytes are absent unless `includeBody` is enabled.
 
 Redacting a covered header, withholding a signed body, or folding signature-sensitive repeated fields can prevent remote signature verification. Enabling body disclosure does not establish complete signed-request parity. There is no local signature verifier, directory fetcher, signature cache, or guarantee that every signed request can be verified by this projection.
 
@@ -299,6 +322,8 @@ Arcjet\Middleware\ArcjetMiddleware::process(
 | `Challenge` | Generic HTTP 403; no challenge flow is implemented. |
 | `Error` | Generic HTTP 503. Invalid remote aggregate conclusions become ERROR during decoding. |
 
-`failOpen: true` delegates on `ERROR` only; it does not allow DENY or CHALLENGE. Fail-open leaves the attached decision as `ERROR`, not `ALLOW`.
+The default 500 ms service deadline favors a short latency budget; slow protection calls can reduce availability through fail-closed HTTP 503 responses. Raising it permits longer service waits but holds PHP workers longer. Tune the deadline and the HTTP client's actual timeouts together for your deployment.
+
+`failOpen: true` delegates only when `Decision::isFailOpenEligible()` is true: an ERROR with explicit `Transport` or `Service` failure kind. This includes a remote aggregate ERROR and validated service/protocol failures. Request, internal, and unclassified errors still return HTTP 503, including oversized/nonseekable opted-in bodies and arbitrary runtime exceptions from a misbehaving client. DENY and CHALLENGE never fail-open. Delegation during an eligible operational failure leaves the attached decision as `ERROR`, not `ALLOW`; protection has not established that the request is safe.
 
 Before delegation, middleware adds the decision as request attribute `ArcjetMiddleware::DECISION_ATTRIBUTE` (`'arcjet.decision'`). The handler can retrieve it with `$request->getAttribute(ArcjetMiddleware::DECISION_ATTRIBUTE)`. Denial/unavailability responses have empty bodies and `Cache-Control: no-store`; they contain no raw service message or credential.

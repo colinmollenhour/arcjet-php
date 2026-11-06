@@ -67,13 +67,13 @@ final readonly class Arcjet
             $transport = new DecideTransport($this->httpClient, $this->requestFactory, $this->streamFactory, $this->options, $this->key);
             return ResponseDecoder::decode($transport->send($payload));
         } catch (ProtectionException $error) {
-            return $this->failure($error->errorCode, $error->getMessage());
+            return $this->failure($error->errorCode, $error->getMessage(), $error->failureKind);
         } catch (\Throwable) {
-            return $this->failure('runtime_error', 'Arcjet protection failed while preparing, sending, or reading the decision.');
+            return $this->failure('runtime_error', 'Arcjet protection failed while preparing, sending, or reading the decision.', FailureKind::Internal);
         }
     }
 
-    private function failure(string $code, string $message): Decision
+    private function failure(string $code, string $message, FailureKind $failureKind): Decision
     {
         try {
             // Never include exception objects/messages, request headers, response
@@ -82,7 +82,7 @@ final readonly class Arcjet
         } catch (\Throwable) {
             // An unavailable/misbehaving logger must not change security policy.
         }
-        return Decision::error($code, $message);
+        return Decision::error($code, $message, $failureKind);
     }
 
     /** @return array{version: string, rules: int} */

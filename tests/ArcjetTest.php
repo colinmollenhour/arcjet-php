@@ -227,6 +227,7 @@ final class ArcjetTest extends SdkTestCase
         $logger = new class extends AbstractLogger {
             /** @var list<string> */
             public array $entries = [];
+            /** @param array<string, mixed> $context */
             public function log($level, string|\Stringable $message, array $context = []): void
             {
                 $this->entries[] = (string) $message . json_encode($context, JSON_THROW_ON_ERROR);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Arcjet\Internal;
 
+use Arcjet\FailureKind;
 use Google\Protobuf\Descriptor;
 use Google\Protobuf\Internal\GPBType;
 
@@ -101,6 +102,6 @@ final class ProtobufGuard
 
     private static function invalid(): never
     {
-        throw new ProtectionException('malformed_response', 'Arcjet returned malformed protobuf.');
+        throw new ProtectionException('malformed_response', 'Arcjet returned malformed protobuf.', FailureKind::Service);
     }
 }
