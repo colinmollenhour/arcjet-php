@@ -1,0 +1,7 @@
+/arcjet-py/
+/.tmp/
+/vendor/
+/.phpunit.cache/
+/.phpstan-cache/
+/composer.phar
+/.env

@@ -1,0 +1,10 @@
+parameters:
+    level: max
+    phpVersion: 80400
+    paths:
+        - src
+        - tests
+    excludePaths:
+        analyse:
+            - src/Internal/Proto/*
+    tmpDir: vendor/.cache/phpstan

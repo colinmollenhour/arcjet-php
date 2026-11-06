@@ -1,0 +1,18 @@
+Arcjet PHP SDK
+
+This package ports selected functionality from the Arcjet Python SDK:
+https://github.com/arcjet/arcjet-py
+
+Reference revision: 498b28b17ebc1a652974ab8ae98c60604e892095
+
+The upstream project is licensed under the Apache License, Version 2.0.
+A copy of that license is included in LICENSE.
+
+Porting changes include PHP 8.4+ APIs, PSR-based HTTP transport and logging,
+and a feature scope limited to Bot Protection, Shield WAF, and IP Analysis.
+The upstream Python runtime, framework adapters, and WASM binaries are not
+distributed as part of this PHP package.
+
+This is an independently developed port, not a statement of endorsement
+by the upstream authors. Arcjet names and trademarks remain the property
+of their respective owners.

@@ -1,0 +1,51 @@
+{
+  "name": "arcjet/arcjet-php",
+  "description": "PSR-based PHP SDK for Arcjet bot protection, Shield WAF, and IP analysis.",
+  "type": "library",
+  "license": "Apache-2.0",
+  "keywords": ["arcjet", "security", "bot-protection", "waf", "ip-analysis"],
+  "require": {
+    "php": "^8.4",
+    "ext-json": "*",
+    "google/protobuf": "^4.33",
+    "psr/http-client": "^1.0",
+    "psr/http-factory": "^1.0",
+    "psr/http-message": "^2.0",
+    "psr/http-server-handler": "^1.0",
+    "psr/http-server-middleware": "^1.0",
+    "psr/log": "^3.0"
+  },
+  "require-dev": {
+    "nyholm/psr7": "^1.8",
+    "phpstan/phpstan": "^2.0",
+    "phpunit/phpunit": "^12.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Arcjet\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Arcjet\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "lint": "@php -r 'foreach ([\"src\", \"tests\"] as $directory) { if (!is_dir($directory)) { continue; } foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS)) as $file) { if ($file->isFile() && $file->getExtension() === \"php\") { passthru(escapeshellarg(PHP_BINARY) . \" -l \" . escapeshellarg($file->getPathname()), $status); if ($status !== 0) { exit($status); } } } }'",
+    "test": "@php vendor/bin/phpunit",
+    "analyse": "@php vendor/bin/phpstan analyse --no-progress --memory-limit=512M",
+    "check": [
+      "@composer validate --strict",
+      "@lint",
+      "@test",
+      "@analyse"
+    ]
+  },
+  "config": {
+    "allow-plugins": false,
+    "platform": {
+      "php": "8.4.0"
+    },
+    "sort-packages": true
+  }
+}

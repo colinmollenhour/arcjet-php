@@ -1,0 +1,11 @@
+* text=auto eol=lf
+/.github export-ignore
+/.tmp export-ignore
+/arcjet-py export-ignore
+/tests export-ignore
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/composer.lock export-ignore
+/phpunit.xml.dist export-ignore
+/phpstan.neon.dist export-ignore
